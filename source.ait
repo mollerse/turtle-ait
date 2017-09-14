@@ -9,7 +9,7 @@ point: [] cons cons ;
 nodeCanvas canvasContext pop
 1000 1000 canvasDimensions
 "#333" fillStyle
-"rgba(255, 255, 255, 0.75)" strokeStyle
+"rgba(255, 255, 255, 0.9)" strokeStyle
 3 lineWidth
 
 # Some helper vars for dimensions

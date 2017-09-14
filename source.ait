@@ -1,14 +1,18 @@
+# Load some dependencies
 @load ait-canvas ;
 @load ait-canvas/node ;
 
+# Helper word for constructing points [x y]
 point: [] cons cons ;
 
+# Configure the canvas
 nodeCanvas canvasContext pop
 1000 1000 canvasDimensions
 "#333" fillStyle
 "rgba(255, 255, 255, 0.75)" strokeStyle
 3 lineWidth
 
+# Some helper vars for dimensions
 canvasWidth -> W
 canvasHeight -> H
 W 2 / -> WMax
@@ -16,17 +20,25 @@ H 2 / -> HMax
 WMax neg -> WMin
 HMax neg -> HMin
 
+# Center and fill the canvas
 WMax HMax translate
 WMin HMin point W H fillRect
 
+# Begin drawing at [WMin + 50, 0]
 WMin 50 + 0 point moveTo
 150
 [
+  # Continue the line to [0, HMax - 50 + 3i]
+  # Essentially shrinking the line by 3x the current line count
   0 HMax 50 _i 3 * + - point lineTo
+  # For every line rotate the canvas 90 deg
   PI 2 / rotate
+  # Every fourth line, rotate by an additional 5.6 deg
   _i 4 mod 0 = [ PI 32 / rotate ] cond
 ]
 times
+# When all lines are drawn, stroke the path
 stroke
 
+# And save the image
 "turtle-ait.png" writeImage

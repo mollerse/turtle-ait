@@ -1,0 +1,20 @@
+{
+  "name": "turtle-ait",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ait-lang source.ait",
+    "dev": "onchange '*.ait' -i -- npm start"
+  },
+  "keywords": [],
+  "author": "Stian Møllersen <stian.moellersen@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "ait-canvas": "0.4.2",
+    "ait-lang": "0.3.2"
+  },
+  "devDependencies": {
+    "onchange": "3.2.1"
+  }
+}

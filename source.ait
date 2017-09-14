@@ -1,0 +1,32 @@
+@load ait-canvas ;
+@load ait-canvas/node ;
+
+point: [] cons cons ;
+
+nodeCanvas canvasContext pop
+1000 1000 canvasDimensions
+"#333" fillStyle
+"rgba(255, 255, 255, 0.75)" strokeStyle
+3 lineWidth
+
+canvasWidth -> W
+canvasHeight -> H
+W 2 / -> WMax
+H 2 / -> HMax
+WMax neg -> WMin
+HMax neg -> HMin
+
+WMax HMax translate
+WMin HMin point W H fillRect
+
+WMin 50 + 0 point moveTo
+150
+[
+  0 HMax 50 _i 3 * + - point lineTo
+  PI 2 / rotate
+  _i 4 mod 0 = [ PI 32 / rotate ] cond
+]
+times
+stroke
+
+"turtle-ait.png" writeImage

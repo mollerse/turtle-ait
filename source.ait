@@ -1,18 +1,53 @@
 # Load some dependencies
 @load ait-canvas ;
 @load ait-canvas/node ;
+@load ./turtle ;
 
-# Helper word for constructing points [x y]
 point: [] cons cons ;
+deg2rad: PI 180 / * ;
+dup2: dupd dup rolldown ;
+centerCanvas: WMax HMax translate ;
+clearCanvas: WMin HMin point W H fillRect ;
 
-# Configure the canvas
+edge: turn move ;
+spin: slices [ dup2 turn exec ] times pop pop ;
+polygon: [ [ edge ] nullary ] times pop pop ;
+slices: dup PI 2 * swap / swap ;
+regpoly: slices polygon ;
+
+triangle: 3 regpoly ;
+square: 4 regpoly ;
+pentagon: 5 regpoly ;
+hexagon: 6 regpoly ;
+circle: 36 regpoly ;
+
+star: 144 deg2rad 5 polygon ;
+
+shapes: begin [250 -425] go 500 triangle 500 square 500 pentagon 500 hexagon show ;
+
+burst: begin 60 [ PI 30 / _i * head [0 0] go W 2 / move ] times show ;
+squaril: begin [-425 -225] go 20 [ 850 move 126 deg2rad turn ] times show ;
+spiro: begin [ W 25 / circle ] 15 spin show ;
+stars: begin [ W 2 / star ] 3 spin show ;
+rose: begin 0 102 [ 5 + dup move 84 deg2rad turn ] times show pop ;
+
+petalArc: [ dup2 turn move ] times pop pop ;
+petal:
+  2 [
+    28 6 deg2rad 16 petalArc
+    7 -6 deg2rad 16 petalArc
+    180 deg2rad turn
+  ] times ;
+flower: begin [ petal ] 15 spin show ;
+
+spiral: begin 1 [ 750 > ] [] [ 5 + dup move 92 deg2rad turn ] tailrec show ;
+
 nodeCanvas canvasContext pop
 1000 1000 canvasDimensions
 "#333" fillStyle
 "rgba(255, 255, 255, 0.9)" strokeStyle
 3 lineWidth
 
-# Some helper vars for dimensions
 canvasWidth -> W
 canvasHeight -> H
 W 2 / -> WMax
@@ -20,25 +55,36 @@ H 2 / -> HMax
 WMax neg -> WMin
 HMax neg -> HMin
 
-# Center and fill the canvas
-WMax HMax translate
-WMin HMin point W H fillRect
+centerCanvas
 
-# Begin drawing at [WMin + 50, 0]
-WMin 50 + 0 point moveTo
-150
-[
-  # Continue the line to [0, HMax - 50 + 3i]
-  # Essentially shrinking the line by 3x the current line count
-  0 HMax 50 _i 3 * + - point lineTo
-  # For every line rotate the canvas 90 deg
-  PI 2 / rotate
-  # Every fourth line, rotate by an additional 5.6 deg
-  _i 4 mod 0 = [ PI 32 / rotate ] cond
-]
-times
-# When all lines are drawn, stroke the path
-stroke
+clearCanvas
+shapes
+"images/shapes.png" writeImage
 
-# And save the image
-"turtle-ait.png" writeImage
+clearCanvas
+burst
+"images/burst.png" writeImage
+
+clearCanvas
+squaril
+"images/squaril.png" writeImage
+
+clearCanvas
+spiro
+"images/spiro.png" writeImage
+
+clearCanvas
+stars
+"images/stars.png" writeImage
+
+clearCanvas
+rose
+"images/rose.png" writeImage
+
+clearCanvas
+flower
+"images/flower.png" writeImage
+
+clearCanvas
+spiral
+"images/spiral.png" writeImage

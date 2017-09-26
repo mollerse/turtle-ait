@@ -1,6 +1,6 @@
 # Turtle Ait
 
-Got inspired by some turtle graphics examples and made this little thing with Ait.
+Got inspired by [AshleyF's Turtle graphics in ForthKit](https://github.com/AshleyF/Forthkit/tree/master/library/turtle) and made this little thing with Ait.
 
 ## Local
 
@@ -8,4 +8,11 @@ Got inspired by some turtle graphics examples and made this little thing with Ai
 
 ## Result
 
-![Turtle Graphics Demo](./turtle-ait.png)
+![shapes](./images/shapes.png)
+![burst](./images/burst.png)
+![squaril](./images/squaril.png)
+![spiro](./images/spiro.png)
+![stars](./images/stars.png)
+![rose](./images/rose.png)
+![flower](./images/flower.png)
+![spiral](./images/spiral.png)

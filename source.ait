@@ -3,16 +3,20 @@
 @load ait-canvas/node ;
 @load ./turtle ;
 
-point: [] cons cons ;
+# Convenience words
 deg2rad: PI 180 / * ;
 dup2: dupd dup rolldown ;
+pop2: pop pop ;
 centerCanvas: WMax HMax translate ;
-clearCanvas: WMin HMin point W H fillRect ;
+clearCanvas: WMin HMin [] cons cons W H fillRect ;
+drawAndSave: clearCanvas exec "images/%s.png" replace writeImage ;
 
-edge: turn move ;
-spin: slices [ dup2 turn exec ] times pop pop ;
-polygon: [ [ edge ] nullary ] times pop pop ;
+# Parts of various shapes
 slices: dup PI 2 * swap / swap ;
+edge: turn move ;
+polygon: [ dup2 edge ] times pop2 ;
+
+spin: slices [ dup2 turn exec ] times pop2 ;
 regpoly: slices polygon ;
 
 triangle: 3 regpoly ;
@@ -23,68 +27,48 @@ circle: 36 regpoly ;
 
 star: 144 deg2rad 5 polygon ;
 
-shapes: begin [250 -425] go 500 triangle 500 square 500 pentagon 500 hexagon show ;
+petalArcs: [ dup2 turn move ] times pop2 ;
+petal:
+  2 [
+    28 6 deg2rad 16 petalArcs
+    7 -6 deg2rad 16 petalArcs
+    180 deg2rad turn
+  ] times ;
 
+# The main shapes
+shapes: begin [250 -425] go 500 triangle 500 square 500 pentagon 500 hexagon show ;
 burst: begin 60 [ PI 30 / _i * head [0 0] go W 2 / move ] times show ;
 squaril: begin [-425 -225] go 20 [ 850 move 126 deg2rad turn ] times show ;
 spiro: begin [ W 25 / circle ] 15 spin show ;
 stars: begin [ W 2 / star ] 3 spin show ;
-rose: begin 0 102 [ 5 + dup move 84 deg2rad turn ] times show pop ;
-
-petalArc: [ dup2 turn move ] times pop pop ;
-petal:
-  2 [
-    28 6 deg2rad 16 petalArc
-    7 -6 deg2rad 16 petalArc
-    180 deg2rad turn
-  ] times ;
+rose: begin 0 102 [ 5 + dup move 84 deg2rad turn ] times pop show ;
 flower: begin [ petal ] 15 spin show ;
+spiral: begin 1 [ 750 > ] [] [ 5 + dup move 92 deg2rad turn ] tailrec pop show ;
 
-spiral: begin 1 [ 750 > ] [] [ 5 + dup move 92 deg2rad turn ] tailrec show ;
-
+# Configure canvas
 nodeCanvas canvasContext pop
 1000 1000 canvasDimensions
 "#333" fillStyle
 "rgba(255, 255, 255, 0.9)" strokeStyle
 3 lineWidth
 
-canvasWidth -> W
-canvasHeight -> H
-W 2 / -> WMax
-H 2 / -> HMax
-WMax neg -> WMin
-HMax neg -> HMin
+# Save some convenience vars
+canvasWidth ->> W
+canvasHeight ->> H
+W 2 / ->> WMax
+H 2 / ->> HMax
+WMax neg ->> WMin
+HMax neg ->> HMin
 
+# Begin drawing
 centerCanvas
 
-clearCanvas
-shapes
-"images/shapes.png" writeImage
-
-clearCanvas
-burst
-"images/burst.png" writeImage
-
-clearCanvas
-squaril
-"images/squaril.png" writeImage
-
-clearCanvas
-spiro
-"images/spiro.png" writeImage
-
-clearCanvas
-stars
-"images/stars.png" writeImage
-
-clearCanvas
-rose
-"images/rose.png" writeImage
-
-clearCanvas
-flower
-"images/flower.png" writeImage
-
-clearCanvas
-spiral
-"images/spiral.png" writeImage
+# Draw all of the main shapes and save an image
+"shapes" [ shapes ] drawAndSave
+"burst" [ burst ] drawAndSave
+"squaril" [ squaril ] drawAndSave
+"spiro" [ spiro ] drawAndSave
+"stars" [ stars ] drawAndSave
+"rose" [ rose ] drawAndSave
+"flower" [ flower ] drawAndSave
+"spiral" [ spiral ] drawAndSave

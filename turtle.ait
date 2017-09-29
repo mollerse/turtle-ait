@@ -1,17 +1,15 @@
-moveY: Theta sin * Pos 1 at + Pos 1 ins pop ;
-moveX: Theta cos * Pos 0 at + Pos 0 ins pop ;
+updatePos: dup updateXPos updateYPos ;
+updateXPos: Theta cos * Pos 0 at + Pos 0 ins pop ;
+updateYPos: Theta sin * Pos 1 at + Pos 1 ins pop ;
 
 begin:
   0 ->> Theta
   [0 0] ->> Pos
   beginPath
   Pos moveTo ;
-jump:
-  dup moveX moveY
-  Pos moveTo ;
-move:
-  dup moveX moveY
-  Pos lineTo ;
+
+jump: updatePos Pos moveTo ;
+move: updatePos Pos lineTo ;
 turn: Theta + ->> Theta ;
 head: ->> Theta ;
 show: stroke ;
